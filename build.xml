@@ -1,0 +1,82 @@
+<!--~
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<project name="ProjectBuild" basedir="." default="deploy">
+
+	<property name="src.dir" value="src"/>
+	<property name="build.dir" value="web"/>
+	<property file="build.properties"/>
+	<property name="target" value="1.8"/>
+	<property name="source" value="1.8"/>
+
+	<path id="compile.classpath">
+		<fileset dir="${build.dir}/WEB-INF/lib">
+			<include name="**/*.jar"/>
+			<include name="**/*.xml"/>
+		</fileset>
+		<fileset dir="${build.dir}/WEB-INF/lib-devel">
+			<include name="**/*.jar"/>
+			<include name="**/*.xml"/>
+		</fileset>
+	</path>
+
+	<!-- Compile the Java code -->
+	<target name="build-project">
+
+		<!-- Delete old compiled code -->
+		<delete dir="${build.dir}/WEB-INF/classes" failonerror="false" quiet="true" verbose="true"/>
+
+		<mkdir dir="${build.dir}/WEB-INF/classes"/>
+
+		<javac debug="true" destdir="${build.dir}/WEB-INF/classes" includeantruntime="false" source="${source}" target="${target}">
+			<src path="${src.dir}"/>
+			<classpath refid="compile.classpath"/>
+		</javac>
+	</target>
+
+	<!-- Now build the war file and deploy it -->
+	<target name="buildwar" depends="build-project" description="Creates a WAR file from the compiled source">
+		<war basedir="${build.dir}" destfile="${project.name}.war" webxml="${build.dir}/WEB-INF/web.xml">
+			<exclude name="WEB-INF/**"/>
+			<!-- Include the js and css folders -->
+			<zipfileset dir="." includes="config.properties" prefix="WEB-INF/classes"/>
+			<zipfileset dir="." includes="logging.properties" prefix="WEB-INF/classes"/>
+			<zipfileset dir="." includes="**-instances.xml" prefix="WEB-INF/classes"/>
+			<fileset dir="${build.dir}" includes="css/**"/>
+			<fileset dir="${build.dir}" includes="js/**"/>
+			<fileset dir="${build.dir}" includes="img/**"/>
+			<fileset dir="${build.dir}" includes="fonts/**"/>
+			<!-- Copy the properties file to a location accessible from the source -->
+			<zipfileset dir="." includes="config.properties" prefix="WEB-INF/classes"/>
+
+			<lib dir="${build.dir}/WEB-INF/lib"/>
+
+			<classes dir="${build.dir}/WEB-INF/classes"/>
+		</war>
+
+	</target>
+
+	<target name="deploy" depends="buildwar" description="Deploys the application to the target server">
+		<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" classpathref="compile.classpath"/>
+		<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" classpathref="compile.classpath"/>
+
+		<undeploy failOnError="false" password="${tomcat.manager.password}" path="/${project.name}" url="${tomcat.manager.url}"
+				  username="${tomcat.manager.username}"/>
+		<deploy password="${tomcat.manager.password}" path="/${project.name}" url="${tomcat.manager.url}" username="${tomcat.manager.username}"
+				war="${project.name}.war"/>
+	</target>
+</project>

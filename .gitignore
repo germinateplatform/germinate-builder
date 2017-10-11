@@ -1,0 +1,12 @@
+/.idea/
+
+# Package Files #
+/*.war
+
+# more caches and things from deploy #
+/web/WEB-INF/classes/
+
+# Local configuration files
+config.properties
+build-dev.properties
+/germinate-builder.iml

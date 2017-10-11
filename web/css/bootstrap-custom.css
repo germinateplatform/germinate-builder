@@ -1,0 +1,120 @@
+/**
+ *  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+ *  Information and Computational Sciences Group at JHI Dundee
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	/* Margin bottom by footer height */
+	margin-bottom: 50px;
+	color: #4e534e;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	/* Set the fixed height of the footer here */
+	height: 40px;
+	background-color: #eee;
+	font-size: 12px;
+}
+
+#logo {
+	height: 125px;
+	float: right;
+}
+
+.footer > div.container {
+	line-height: 40px;
+}
+
+.jumbotron h1 a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.hidden {
+	display: none;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-right {
+	float: right;
+}
+
+.truncate {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ten {
+	max-width: 10%;
+}
+
+.twenty {
+	max-width: 20%;
+}
+
+.thirty {
+	max-width: 30%;
+}
+
+.fourty {
+	max-width: 40%;
+}
+
+.fifty {
+	max-width: 50%;
+}
+
+.sixty {
+	max-width: 60%;
+}
+
+.seventy {
+	max-width: 70%;
+}
+
+.eighty {
+	max-width: 80%;
+}
+
+.ninety {
+	max-width: 90%;
+}
+
+#svn-accordion p {
+	word-break: break-all;
+}
+
+@media screen and (max-width: 767px) {
+	.jumbotron {
+		text-align: center;
+	}
+
+	#logo {
+		float: none;
+		height: 100px;
+	}
+}

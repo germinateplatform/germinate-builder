@@ -1,1 +1,1 @@
-# germinate-builder
+# Germinate Builder
