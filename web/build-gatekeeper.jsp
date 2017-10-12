@@ -4,7 +4,7 @@
 <%@ page import="jhi.germinatebuilder.server.manager.*" %>
 <%@ page import="jhi.germinatebuilder.server.util.*" %>
 
-<%--~
+<%--
   ~  Copyright 2017 Sebastian Raubach from the Information
   ~  and Computational Sciences Group at JHI Dundee
   ~

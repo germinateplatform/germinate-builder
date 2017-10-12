@@ -1,7 +1,7 @@
 <%@ page language ="java" contentType ="application/javascript; charset=UTF-8" pageEncoding="UTF-8"%>
 	<%@ page import="jhi.germinatebuilder.server.*" %>
 
-	<%--~
+	<%--
   ~  Copyright 2017 Sebastian Raubach from the Information
   ~  and Computational Sciences Group at JHI Dundee
   ~

@@ -2,7 +2,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="jhi.germinatebuilder.server.database.*" %>
 
-<%--~
+<%--
   ~  Copyright 2017 Sebastian Raubach from the Information
   ~  and Computational Sciences Group at JHI Dundee
   ~
