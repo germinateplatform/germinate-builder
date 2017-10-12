@@ -1,6 +1,6 @@
 <!--~
-  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
-  ~  Information and Computational Sciences Group at JHI Dundee
+  ~  Copyright 2017 Sebastian Raubach from the Information
+  ~  and Computational Sciences Group at JHI Dundee
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 
 	<property name="src.dir" value="src"/>
 	<property name="build.dir" value="web"/>
-	<property file="build.properties"/>
+	<property file="build-dev.properties"/>
 	<property name="target" value="1.8"/>
 	<property name="source" value="1.8"/>
 

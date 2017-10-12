@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Sebastian Raubach and Paul Shaw from the Information and Computational Sciences Group at JHI Dundee
+ * Copyright 2017 Sebastian Raubach from the Information and Computational Sciences Group at JHI Dundee
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a
  * copy of the License at
@@ -14,10 +14,15 @@
 package jhi.germinatebuilder.server;
 
 import java.io.*;
+import java.util.logging.*;
+import java.util.logging.Logger;
 
+import javax.servlet.Filter;
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
+
+import jhi.germinatebuilder.server.util.*;
 
 @WebFilter("*.jsp")
 public class ApplicationFilter implements Filter
@@ -39,18 +44,30 @@ public class ApplicationFilter implements Filter
 		response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 		response.setDateHeader("Expires", 0); // Proxies.
 
-		String loginURI = request.getContextPath() + "/login";
+		String server = PropertyReader.getProperty(PropertyReader.GATEKEEPER_SERVER);
+		String database = PropertyReader.getProperty(PropertyReader.GATEKEEPER_DATABASE);
 
-		boolean loggedIn = session != null && session.getAttribute("user") != null;
-		boolean loginRequest = request.getRequestURI().startsWith(loginURI);
-
-		if (loggedIn || loginRequest)
+		if (StringUtils.isEmpty(server, database))
 		{
+			// No Gatekeeper configured, so allow anyone in.
+			Logger.getLogger("").log(Level.WARNING, "Gatekeeper configuration not found, allowing public access!");
 			chain.doFilter(request, response);
 		}
 		else
 		{
-			response.sendRedirect(loginURI);
+			String loginURI = request.getContextPath() + "/login";
+
+			boolean loggedIn = session != null && session.getAttribute("user") != null;
+			boolean loginRequest = request.getRequestURI().startsWith(loginURI);
+
+			if (loggedIn || loginRequest)
+			{
+				chain.doFilter(request, response);
+			}
+			else
+			{
+				response.sendRedirect(loginURI);
+			}
 		}
 	}
 

@@ -1,14 +1,18 @@
 /**
- * Copyright 2017 Sebastian Raubach and Paul Shaw from the Information and Computational Sciences Group at JHI Dundee
+ *  Copyright 2017 Sebastian Raubach from the Information
+ *  and Computational Sciences Group at JHI Dundee
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a
- * copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations
- * under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package jhi.germinatebuilder.server.manager;
@@ -26,29 +30,19 @@ import jhi.germinatebuilder.server.database.*;
 public class InstanceManager extends AbstractManager
 {
 	private static final String COMMON_TABLES           = " instances LEFT JOIN instance_types ON instance_types.id = instances.type_id LEFT JOIN user_permissions ON user_permissions.instance_id = instances.id ";
-	private static final String SELECT_ALL              = "SELECT * FROM " + COMMON_TABLES + " WHERE enabled = 1 AND user_id = ? ORDER BY instance_types.id, instances.display_name";
-	private static final String SELECT_BY_TYPE          = "SELECT * FROM " + COMMON_TABLES + " WHERE enabled = 1 AND user_id = ? AND instance_types.description = ?";
-	private static final String SELECT_BY_TYPE_AND_NAME = "SELECT * FROM " + COMMON_TABLES + " WHERE enabled = 1 AND user_id = ? AND instance_types.description = ? AND instances.instance_name IN (%s)";
-	private static final String SELECT_BY_ID            = "SELECT * FROM " + COMMON_TABLES + " WHERE enabled = 1 AND user_id = ? AND id = ?";
+	private static final String SELECT_ALL              = "SELECT DISTINCT instances.*, instance_types.* FROM " + COMMON_TABLES + " WHERE enabled = 1 AND user_id LIKE ? ORDER BY instance_types.id, instances.display_name";
+	private static final String SELECT_BY_TYPE          = "SELECT DISTINCT instances.*, instance_types.* FROM " + COMMON_TABLES + " WHERE enabled = 1 AND user_id LIKE ? AND instance_types.description = ?";
+	private static final String SELECT_BY_TYPE_AND_NAME = "SELECT DISTINCT instances.*, instance_types.* FROM " + COMMON_TABLES + " WHERE enabled = 1 AND user_id LIKE ? AND instance_types.description = ? AND instances.instance_name IN (%s)";
 
 	public static InstanceManager get()
 	{
 		return InstanceManager.Inst.INSTANCE;
 	}
 
-	public static Instance getById(Long id, User user) throws DatabaseException
-	{
-		return new DatabaseObjectQuery<Instance>(SELECT_BY_ID)
-				.setLong(user.getId())
-				.setLong(id)
-				.run()
-				.getObject(Instance.Parser.Inst.getInstance());
-	}
-
 	public static List<Instance> getAll(User user) throws DatabaseException
 	{
 		return new DatabaseObjectQuery<Instance>(SELECT_ALL)
-				.setLong(user.getId())
+				.setString(user == null ? "%" : Long.toString(user.getId()))
 				.run()
 				.getObjects(Instance.Parser.Inst.getInstance(), true);
 	}
@@ -56,7 +50,7 @@ public class InstanceManager extends AbstractManager
 	public static List<Instance> getAllForType(InstanceType type, User user) throws DatabaseException
 	{
 		return new DatabaseObjectQuery<Instance>(SELECT_BY_TYPE)
-				.setLong(user.getId())
+				.setString(user == null ? "%" : Long.toString(user.getId()))
 				.setString(type.getName())
 				.run()
 				.getObjects(Instance.Parser.Inst.getInstance(), true);
@@ -66,7 +60,7 @@ public class InstanceManager extends AbstractManager
 	{
 		String formatted = String.format(SELECT_BY_TYPE_AND_NAME, generateSqlPlaceholderString(instanceNames.length));
 		return new DatabaseObjectQuery<Instance>(formatted)
-				.setLong(user.getId())
+				.setString(user == null ? "%" : Long.toString(user.getId()))
 				.setString(type.getName())
 				.setStrings(instanceNames)
 				.run()
