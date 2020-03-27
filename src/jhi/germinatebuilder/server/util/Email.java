@@ -58,7 +58,7 @@ public class Email
 
 		Session session;
 
-		if (StringUtils.isEmpty(emailProps.username, emailProps.password))
+		if (StringUtils.isEmpty(emailProps.password))
 		{
 			props.put("mail.smtp.auth", "false");
 			session = Session.getInstance(props);
